@@ -1,0 +1,39 @@
+{
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${minecraft_version}-${version}-fabric",
+  
+    "name": "${mod_name} [FABRIC]",
+    "description": "${mod_description}",
+    "authors": [
+      "${mod_author}"
+    ],
+    "contact": {
+      "homepage": "${mod_homepage}",
+      "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+  
+    "license": "${mod_license}",
+    "icon": "assets/modid/icon.png",
+  
+    "environment": "*",
+    "entrypoints": {
+      "main": [
+        "com.r4ndomize.magitech.storage.ExampleMod"
+      ]
+    },
+    "mixins": [
+      "magitech_storage.mixins.json"
+    ],
+  
+    "depends": {
+      "fabricloader": ">=0.14",
+      "fabric": "*",
+      "minecraft": "1.19.x",
+      "java": ">=17"
+    },
+    "suggests": {
+      "another-mod": "*"
+    }
+  }
+  

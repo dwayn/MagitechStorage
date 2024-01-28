@@ -1,0 +1,111 @@
+plugins {
+    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'maven-publish'
+    id 'idea'
+}
+
+archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    implementation project(":Common")
+}
+
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+    }
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+//    inputs.property "version", project.version
+    var replaceProperties = [
+            minecraft_version: minecraft_version,
+//            minecraft_version_range: minecraft_version_range,
+            fabric_version: fabric_version,
+//            forge_version_range: forge_version_range,
+//            loader_version_range: loader_version_range,
+            mod_author: mod_author,
+            mod_id: mod_id,
+            mod_name: mod_name,
+            version: project.version,
+            mod_license: license,
+//            mod_version: mod_version,
+//            mod_authors: mod_authors,
+            mod_description: mod_description,
+            mod_homepage: mod_homepage,
+    ]
+    inputs.properties replaceProperties
+
+
+    filesMatching("fabric.mod.json") {
+//        expand "version": project.version
+        expand replaceProperties + [project: project]
+    }
+}
+
+//// This block of code expands all declared replace properties in the specified resource targets.
+//// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+//// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
+//// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
+//tasks.named('processResources', ProcessResources).configure {
+//    var replaceProperties = [
+//            minecraft_version: minecraft_version,
+////            minecraft_version_range: minecraft_version_range,
+//            fabric_version: fabric_version,
+////            forge_version_range: forge_version_range,
+////            loader_version_range: loader_version_range,
+//            mod_auhor: mod_author,
+//            mod_id: mod_id,
+//            mod_name: mod_name,
+////            version: version,
+//            mod_license: license,
+////            mod_version: mod_version,
+////            mod_authors: mod_authors,
+////            mod_description: mod_description,
+//    ]
+//    inputs.properties replaceProperties
+//
+//    filesMatching(['fabric.mod.json', 'pack.mcmeta']) {
+//        expand replaceProperties + [project: project]
+//    }
+//}
+
+
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
+}
