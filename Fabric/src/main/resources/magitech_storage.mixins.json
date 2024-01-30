@@ -6,7 +6,7 @@
     "mixins": [
     ],
     "client": [
-      "ExampleMixin"
+      "MagitechStorageMixin"
     ],
     "injectors": {
       "defaultRequire": 1

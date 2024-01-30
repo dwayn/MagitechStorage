@@ -43,22 +43,25 @@ processResources {
 //            loader_version_range: loader_version_range,
             mod_author: mod_author,
             mod_id: mod_id,
-            mod_name: mod_name,
-            version: project.version,
+            mod_name: mod_name + " [Fabric]",
+            version: minecraft_version + "-" + project.version + "-fabric",
             mod_license: license,
 //            mod_version: mod_version,
 //            mod_authors: mod_authors,
+            mod_source: mod_source,
+            mod_issues: mod_issues,
             mod_description: mod_description,
             mod_homepage: mod_homepage,
     ]
     inputs.properties replaceProperties
 
 
-    filesMatching("fabric.mod.json") {
+    filesMatching(["fabric.mod.json"]) {
 //        expand "version": project.version
         expand replaceProperties + [project: project]
     }
 }
+
 
 //// This block of code expands all declared replace properties in the specified resource targets.
 //// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
